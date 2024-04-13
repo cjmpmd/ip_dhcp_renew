@@ -1,9 +1,4 @@
 
-#Notes:
-#WHy
-# Need to grant privileges (if not granted yet) to execute
-# Warning: this will promp the DHCPd to dynamically assign a new IPv4 at reboot, 
-# this will cause connectivity issues if executed via remote (ssh).
 
 # Command to retrieve the current IPv4 address (replace eth0 with your interface name)
 ipv4_address=$(ip addr show ens18 | awk '/inet / {print $2}' | cut -d'/' -f1)
@@ -44,11 +39,10 @@ prompt_reboot() {
     echo "$ipv4_address"
     echo ""
     read -p "Would you like to reboot to apply changes? (yes/no)" answer
-#    read -p "Do you want to reboot the system? (yes/no): " answer
     case "$answer" in
         [Yy]|[Yy][Ee][Ss])
             echo "Rebooting the system..."
-#            sudo reboot
+            sudo reboot
             ;;
         [Nn]|[Nn][Oo])
 
