@@ -1,7 +1,31 @@
 
+    #!/bin/bash
 
+    # Retrieve the network adapter names with IPv4 addresses, excluding the loopback interface and virtual interfaces
+    network_adapters=$(ip -o -4 addr show | awk '{print $2}' | sort -u)
+
+    # Filter out virtual interfaces
+    physical_adapters=""
+    for adapter in $network_adapters; do
+        if [[ $adapter != lo && $adapter != cni* && $adapter != flannel* && $adapter != docker* && $adapter != veth* ]]; then
+            physical_adapters+="$adapter\n"
+        fi
+    done
+
+    # Trim whitespace from the adapter names
+    adapter=$(echo -e "$physical_adapters" | sed 's/^[ \t]*//;s/[ \t]*$//')
+
+    # Print the trimmed physical network adapter names
+    echo -e "Physical network adapters with IPv4 addresses (excluding loopback and virtual interfaces):"
+    echo -e "$adapter"
+
+
+
+sudo apt update && sudo apt upgrade -y
 # Command to retrieve the current IPv4 address (replace eth0 with your interface name)
-ipv4_address=$(ip addr show ens18 | awk '/inet / {print $2}' | cut -d'/' -f1)
+
+ipv4_address=$(ip addr show "$adapter" | awk '/inet / {print $2}' | cut -d'/' -f1)
+# ipv4_address=$(ip addr show ens18 | awk '/inet / {print $2}' | cut -d'/' -f1)
 
 # Specify the file path where you want to append the IPv4 address
 file_path="summary_config"
