@@ -12,20 +12,13 @@
         fi
     done
 
-    # Trim whitespace from the adapter names
+    # Adapter name
     adapter=$(echo -e "$physical_adapters" | sed 's/^[ \t]*//;s/[ \t]*$//')
 
-    # Print the trimmed physical network adapter names
-    echo -e "Physical network adapters with IPv4 addresses (excluding loopback and virtual interfaces):"
-    echo -e "$adapter"
-
-
-
 sudo apt update && sudo apt upgrade -y
-# Command to retrieve the current IPv4 address (replace eth0 with your interface name)
 
+# Command to retrieve the current IPv4 address dynamically
 ipv4_address=$(ip addr show "$adapter" | awk '/inet / {print $2}' | cut -d'/' -f1)
-# ipv4_address=$(ip addr show ens18 | awk '/inet / {print $2}' | cut -d'/' -f1)
 
 # Specify the file path where you want to append the IPv4 address
 file_path="summary_config"
